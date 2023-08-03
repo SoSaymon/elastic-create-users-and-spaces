@@ -12,33 +12,33 @@ class TestCreateSpace:
         "space_id, space_name, description, initials, color, disabled_features, image_url, expected",
         [
             (
-                "test_space_id",
-                "test_space_name",
-                "test_description",
-                "TI",
-                "#FFFFFF",
-                None,
-                None,
-                {
-                    "id": "test_space_id",
-                    "name": "test_space_name",
-                    "description": "test_description",
-                    "initials": "TI",
-                    "color": "#FFFFFF",
-                },
+                    "test_space_id",
+                    "test_space_name",
+                    "test_description",
+                    "TI",
+                    "#FFFFFF",
+                    None,
+                    None,
+                    {
+                        "id": "test_space_id",
+                        "name": "test_space_name",
+                        "description": "test_description",
+                        "initials": "TI",
+                        "color": "#FFFFFF",
+                    },
             ),
         ],
     )
     def test_prepare_payload(
-        self,
-        space_id: str,
-        space_name: str,
-        description: str,
-        initials: str,
-        color: str,
-        disabled_features: list,
-        image_url: str,
-        expected: dict,
+            self,
+            space_id: str,
+            space_name: str,
+            description: str,
+            initials: str,
+            color: str,
+            disabled_features: list,
+            image_url: str,
+            expected: dict,
     ) -> None:
         """
         Test prepare_payload function.
@@ -53,37 +53,37 @@ class TestCreateSpace:
         :return:  None.
         """
         assert (
-            prepare_payload(
-                space_id,
-                space_name,
-                description,
-                initials,
-                color,
-                disabled_features,
-                image_url
-            )
-            == expected
+                prepare_payload(
+                    space_id,
+                    space_name,
+                    description,
+                    initials,
+                    color,
+                    disabled_features,
+                    image_url
+                )
+                == expected
         )
 
     @pytest.mark.parametrize(
         "payload, expected",
         [
             (
-                {
-                    "id": "test_space_id",
-                    "name": "test_space_name",
-                    "description": "test_description",
-                    "initials": "TI",
-                    "color": "#FFFFFF",
-                },
-                None,
+                    {
+                        "id": "test_space_id",
+                        "name": "test_space_name",
+                        "description": "test_description",
+                        "initials": "TI",
+                        "color": "#FFFFFF",
+                    },
+                    None,
             ),
         ],
     )
     def test_create_space(
-        self,
-        payload: dict,
-        expected: None,
+            self,
+            payload: dict,
+            expected: None,
     ) -> None:
         """
         Test create_space function.
