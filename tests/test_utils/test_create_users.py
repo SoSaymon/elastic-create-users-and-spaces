@@ -8,6 +8,10 @@ from src.utils.create_users import User
 
 @pytest.fixture
 def user() -> User:
+    """
+    Fixture for User class
+    :return:  User object
+    """
     return User(
         username="test_user",
         roles=["test_role"],
@@ -22,6 +26,10 @@ def user() -> User:
 
 @pytest.fixture()
 def user_disabled() -> User:
+    """
+    Fixture for User class (disabled)
+    :return:  User object
+    """
     return User(
         username="test_user_disabled",
         roles=["test_role"],
@@ -47,10 +55,20 @@ class TestUser:
         assert user._enabled is True
 
     def test_user_str(self, user: User) -> None:
+        """
+        Test __str__ method
+        :param user:  User object
+        :return:  None
+        """
         assert str(
             user) == "User(username=test_user, roles=['test_role'], password=test_password, password_hash=None, full_name=test_full_name, email=test_email@test.com, metadata={'test_key': 'test_value'}, enabled=True)"
 
     def test_user_prepare_payload(self, user: User) -> None:
+        """
+        Test prepare_payload method
+        :param user:  User object
+        :return:  None
+        """
         assert user.prepare_payload() == {
             "password": "test_password",
             "roles": ["test_role"],
@@ -60,9 +78,19 @@ class TestUser:
         }
 
     def test_create_user(self, user: User) -> None:
+        """
+        Test create method
+        :param user:  User object
+        :return:  None
+        """
         assert user.create() is None
 
     def test_user_disabled(self, user_disabled: User) -> None:
+        """
+        Test User class (disabled)
+        :param user_disabled:  User object
+        :return:  None
+        """
         assert user_disabled._username == "test_user_disabled"
         assert user_disabled._roles == ["test_role"]
         assert user_disabled._password == "test_password"
@@ -73,10 +101,20 @@ class TestUser:
         assert user_disabled._enabled is False
 
     def test_user_disabled_str(self, user_disabled: User) -> None:
+        """
+        Test __str__ method (disabled user)
+        :param user_disabled:  User object
+        :return:  None
+        """
         assert str(
             user_disabled) == "User(username=test_user_disabled, roles=['test_role'], password=test_password, password_hash=None, full_name=test_full_name_disabled, email=test_email@test.com, metadata={'test_key': 'test_value'}, enabled=False)"
 
     def test_user_disabled_prepare_payload(self, user_disabled: User) -> None:
+        """
+        Test prepare_payload method (disabled user)
+        :param user_disabled:  User object
+        :return:  None
+        """
         assert user_disabled.prepare_payload() == {
             "password": "test_password",
             "roles": ["test_role"],
@@ -87,4 +125,9 @@ class TestUser:
         }
 
     def test_create_user_disabled(self, user_disabled: User) -> None:
+        """
+        Test create method (disabled user)
+        :param user_disabled:  User object
+        :return:  None
+        """
         assert user_disabled.create() is None
