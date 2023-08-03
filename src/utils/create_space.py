@@ -1,3 +1,5 @@
+from typing import Dict
+
 import requests
 
 from src.utils.load_env import get_all_env
@@ -11,7 +13,7 @@ def prepare_payload(
         color: str | None = None,
         disabled_features: list | None = None,
         image_url: str | None = None,
-) -> dict:
+) -> Dict[str, str]:
     """
     Prepare payload for space creation.
     :param space_id:  Space ID.
@@ -42,7 +44,7 @@ def prepare_payload(
     return payload
 
 
-def create_space(payload: dict) -> None:
+def create_space(payload: Dict[str, str]) -> None:
     """
     Create space via Kibana API.
     :param payload: Payload.
