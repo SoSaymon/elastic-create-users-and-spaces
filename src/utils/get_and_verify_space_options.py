@@ -109,7 +109,6 @@ def get_and_verify_color() -> COLOR:
             if not len(color) == 7:
                 color = color[0] + color[1] + color[1] + color[2] + color[2] + color[3] + color[3]
 
-
             pattern = r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
             if re.match(pattern, color):
                 return color
