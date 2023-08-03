@@ -29,7 +29,14 @@ class TestSpaceOptions:
             ('test-test_123', 'test-test_123'),
         ],
     )
-    def test_get_and_verify_space_id(self, mocker: MockFixture, space_id: str, expected: str):
+    def test_get_and_verify_space_id(self, mocker: MockFixture, space_id: str, expected: str) -> None:
+        """
+        Test get_and_verify_space_id() function.
+        :param mocker:  MockFixture
+        :param space_id:  Space ID
+        :param expected:  Expected value
+        :return:    None
+        """
         mocker.patch("builtins.input", return_value=space_id)
         assert get_and_verify_space_id() == expected
 
@@ -66,7 +73,14 @@ class TestSpaceOptions:
             ('test-test_123', 'test-test_123'),
         ],
     )
-    def test_get_and_verify_space_name(self, mocker: MockFixture, space_name: str, expected: str):
+    def test_get_and_verify_space_name(self, mocker: MockFixture, space_name: str, expected: str) -> None:
+        """
+        Test get_and_verify_space_name() function.
+        :param mocker:  MockFixture
+        :param space_name:  Space name
+        :param expected:  Expected value
+        :return:   None
+        """
         mocker.patch("builtins.input", return_value=space_name)
         assert get_and_verify_space_name() == expected
 
@@ -87,7 +101,14 @@ class TestSpaceOptions:
             ('test-test_123', 'test-test_123'),
         ],
     )
-    def test_get_and_verify_description(self, mocker: MockFixture, description: str, expected: str):
+    def test_get_and_verify_description(self, mocker: MockFixture, description: str, expected: str) -> None:
+        """
+        Test get_and_verify_description() function.
+        :param mocker:  MockFixture
+        :param description:  Description
+        :param expected:  Expected value
+        :return:  None
+        """
         mocker.patch("builtins.input", return_value=description)
         assert get_and_verify_description() == expected
 
@@ -120,7 +141,14 @@ class TestSpaceOptions:
             (' Tt ', 'TT'),
         ],
     )
-    def test_get_and_verify_initials(self, mocker: MockFixture, initials: str, expected: str):
+    def test_get_and_verify_initials(self, mocker: MockFixture, initials: str, expected: str) -> None:
+        """
+        Test get_and_verify_initials() function.
+        :param mocker:  MockFixture
+        :param initials:  Initials
+        :param expected:  Expected value
+        :return:
+        """
         mocker.patch("builtins.input", return_value=initials)
         assert get_and_verify_initials() == expected
 
@@ -146,7 +174,14 @@ class TestSpaceOptions:
             ('#FAF', '#FFAAFF'),
             ],
     )
-    def test_get_and_verify_color(self, mocker: MockFixture, color: str, expected: str):
+    def test_get_and_verify_color(self, mocker: MockFixture, color: str, expected: str) -> None:
+        """
+        Test get_and_verify_color() function.
+        :param mocker:  MockFixture
+        :param color:  Color
+        :param expected:  Expected value
+        :return: None
+        """
         mocker.patch("builtins.input", return_value=color)
         assert get_and_verify_color() == expected
 
@@ -185,6 +220,13 @@ class TestSpaceOptions:
             (' ,test , ', ['test']),
         ],
     )
-    def test_get_and_verify_disabled_features(self, mocker: MockFixture, disabled_features: str, expected: str):
+    def test_get_and_verify_disabled_features(self, mocker: MockFixture, disabled_features: str, expected: str) -> None:
+        """
+        Test get_and_verify_disabled_features() function.
+        :param mocker:  MockFixture
+        :param disabled_features:  Disabled features
+        :param expected:  Expected value
+        :return:  None
+        """
         mocker.patch("builtins.input", return_value=disabled_features)
         assert get_and_verify_disabled_features() == expected
