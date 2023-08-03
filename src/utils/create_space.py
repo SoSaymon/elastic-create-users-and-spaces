@@ -6,12 +6,23 @@ from src.utils.load_env import get_all_env
 def prepare_payload(
         space_id: str,
         space_name: str,
-        description: str = None,
-        initials: str = None,
-        color: str = None,
-        disabled_features: list = None,
-        image_url: str = None,
+        description: str | None = None,
+        initials: str | None = None,
+        color: str | None = None,
+        disabled_features: list | None = None,
+        image_url: str | None = None,
 ) -> dict:
+    """
+    Prepare payload for space creation.
+    :param space_id:  Space ID.
+    :param space_name:  Space name.
+    :param description:  Space description.
+    :param initials:  Space initials.
+    :param color:  Space color.
+    :param disabled_features:  Space disabled features.
+    :param image_url:  Space image URL.
+    :return:  Payload.
+    """
     payload = {
         "id": space_id,
         "name": space_name,
@@ -32,6 +43,11 @@ def prepare_payload(
 
 
 def create_space(payload: dict) -> None:
+    """
+    Create space via Kibana API.
+    :param payload: Payload.
+    :return: None.
+    """
     elastic_url, kibana_url, username, password = get_all_env()
     headers = {
         'Content-Type': 'application/json',
