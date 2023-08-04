@@ -1,5 +1,9 @@
 import re
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Any, Callable
+from src.utils.user_options_utils.verifiers import verify, verify_roles_regex_pattern, verify_password_length, \
+    verify_if_space_exists_near_comma, verify_if_string_starts_with_comma, verify_if_string_ends_with_comma, \
+    verify_metadata_regex_pattern, verify_enabled_regex_pattern
+from src.utils.user_options_utils.utils import get_input
 
 USERNAME = str
 ROLES = List[str]
@@ -33,148 +37,148 @@ def get_and_verify_user_options() -> UserData:
     return username, roles, password, password_hash, full_name, email, metadata, enabled
 
 
-def get_and_verify_username() -> USERNAME:
+def get_and_verify_username(get_user_username_fn: Callable[[str], str] = get_input) -> USERNAME:
     """
     Get and verify the username
     :return:  String username
     """
     while True:
-        username = input('Enter the username (Required): ')
+        username = get_user_username_fn('Enter the username (Required): ')
+        username = username.strip()
 
-        if username:
-            username = username.strip()
+        if verify(username):
             return username
         print('Username is required.')
 
 
-def get_and_verify_roles() -> ROLES:
+def get_and_verify_roles(get_user_role_fn: Callable[[str], str] = get_input) -> ROLES:
     """
     Get and verify the roles
     :return:  List of roles or None
     """
     while True:
-        roles = input('Enter the roles (Required, comma separated): ')
+        roles = get_user_role_fn('Enter the roles (Required, comma separated): ')
+        roles = roles.strip()
 
-        if roles:
-            roles = roles.strip()
-            pattern = r'^[a-zA-Z0-9_-]+(,[a-zA-Z0-9_-]+)*$'
-            if re.match(pattern, roles):
+        if verify(roles):
+
+            if verify_roles_regex_pattern(roles):
                 return roles.split(',')
-            elif not re.match(pattern, roles):
-                print('Roles must be comma separated. Example: role1,role2')
             else:
-                print('Roles are required.')
+                print('Roles must be comma separated. Example: role1,role2')
 
         else:
             print('Roles are required.')
 
 
-def get_and_verify_password() -> PASSWORD:
+def get_and_verify_password(get_user_password_fn: Callable[[str], str] = get_input) -> PASSWORD:
     """
     Get and verify the password
     :return:  String of password or None
     """
     while True:
-        password = input('Enter the password (Optional if you will use password_hash): ')
+        password = get_user_password_fn('Enter the password (Optional if you will use password_hash): ')
+        password = password.strip()
 
-        if password:
-            password = password.strip()
-            if len(password) <= 6:
-                print('Password must be at least 6 characters.')
-                continue
-            return password
+        if verify(password):
+            if verify_password_length(password):
+                return password
+
+            print('Password must be at least 6 characters.')
+            continue
 
         return None
 
 
-def get_and_verify_password_hash() -> PASSWORD_HASH:
+def get_and_verify_password_hash(get_user_password_hash_fn: Callable[[str], str] = get_input) -> PASSWORD_HASH:
     """
     Get and verify the password hash
     :return:  String of password hash
     """
     while True:
-        password_hash = input('Enter the password hash (Required): ')
+        password_hash = get_user_password_hash_fn('Enter the password hash (Required): ')
+        password_hash = password_hash.strip()
 
-        if password_hash:
-            password_hash = password_hash.strip()
+        if verify(password_hash):
             return password_hash
         print('Password hash is required.')
 
 
-def get_and_verify_full_name() -> FULL_NAME:
+def get_and_verify_full_name(get_user_full_name_fn: Callable[[str], str] = get_input) -> FULL_NAME:
     """
     Get and verify the full name
     :return:  String of full name or None
     """
     while True:
-        full_name = input('Enter the full name (Optional): ')
+        full_name = get_user_full_name_fn('Enter the full name (Optional): ')
+        full_name = full_name.strip()
 
-        if full_name:
-            full_name = full_name.strip()
+        if verify(full_name):
             return full_name
         return None
 
 
-def get_and_verify_email() -> EMAIL:
+def get_and_verify_email(get_user_email_fn: Callable[[str], str] = get_input) -> EMAIL:
     """
     Get and verify the email
     :return:  String of email or None
     """
     while True:
-        email = input('Enter the email (Optional): ')
+        email = get_user_email_fn('Enter the email (Optional): ')
+        email = email.strip()
 
-        if email:
-            email = email.strip()
+        if verify(email):
             return email
         return None
 
 
-def get_and_verify_metadata() -> METADATA:
+def get_and_verify_metadata(get_user_metadata_fn: Callable[[str], str] = get_input) -> METADATA:
     """
     Get and verify the metadata
     :return:  Dict of metadata or None
     """
     while True:
-        metadata = input('Enter the metadata (Optional, comma separated, key:value format): ')
-        if metadata:
-            metadata = metadata.strip()
+        metadata = get_user_metadata_fn('Enter the metadata (Optional, comma separated, key:value format): ')
+        metadata = metadata.strip()
 
-            if re.search(r',\s', metadata):
+        if verify(metadata):
+
+            if verify_if_space_exists_near_comma(metadata):
                 metadata = metadata.replace(', ', ',')
-
-            if re.search(r'\s,', metadata):
                 metadata = metadata.replace(' ,', ',')
 
-            if metadata.startswith(','):
+            if verify_if_string_starts_with_comma(metadata):
                 metadata = metadata[1:]
 
-            if metadata.endswith(','):
+            if verify_if_string_ends_with_comma(metadata):
                 metadata = metadata[:-1]
 
-            pattern = r'^[a-zA-Z0-9_-]+:[a-zA-Z0-9_-]+(,[a-zA-Z0-9_-]+:[a-zA-Z0-9_-]+)*$'
-            if re.match(pattern, metadata):
+            if verify_metadata_regex_pattern(metadata):
                 return dict(item.split(':') for item in metadata.split(','))
-            elif not re.match(pattern, metadata) and metadata != '':
+            else:
                 print('Metadata must be comma separated and in key:value format. Example: key1:value1,key2:value2')
                 print('If you do not want to set metadata, leave the field blank.')
                 continue
+
         return None
 
 
-def get_and_verify_enabled() -> ENABLED:
+def get_and_verify_enabled(get_user_enabled_fn: Callable[[str], str] = get_input) -> ENABLED:
     """
     Get and verify the enabled status
     :return:  True if enabled, False if disabled
     """
     while True:
-        enabled = input('Enter the enabled status (Optional (default: True), True/False): ')
+        enabled = get_user_enabled_fn('Enter the enabled status (Optional (default: True), True/False): ')
+        enabled = enabled.strip().lower()
 
-        if enabled:
-            enabled = enabled.strip()
-            if enabled.lower() in ['true', 'false']:
-                return enabled.lower() == 'true'
-            elif enabled.lower() not in ['true', 'false']:
+        if verify(enabled):
+
+            if verify_enabled_regex_pattern(enabled):
+                return enabled == 'true'
+            else:
                 print('Enabled status must be either true or false.')
                 print('If you do not want to set enabled status, leave the field blank.')
                 continue
+
         return True
