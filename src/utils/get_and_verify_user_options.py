@@ -62,6 +62,10 @@ def get_and_verify_roles(get_user_role_fn: Callable[[str], str] = get_input) -> 
 
         if verify(roles):
 
+            if verify_if_space_exists_near_comma(roles):
+                roles = roles.replace(', ', ',')
+                roles = roles.replace(' ,', ',')
+
             if verify_roles_regex_pattern(roles):
                 return roles.split(',')
             else:
