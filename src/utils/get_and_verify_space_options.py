@@ -23,6 +23,7 @@ SpaceData = Tuple[SPACE_ID, SPACE_NAME, DESCRIPTION, INITIALS, COLOR, DISABLED_F
 def get_and_verify_space_options() -> SpaceData:
     """
     Get space options.
+
     :return:  A tuple of space options.
     """
     space_id = get_and_verify_space_id()
@@ -39,6 +40,7 @@ def get_and_verify_space_options() -> SpaceData:
 def get_and_verify_space_id(get_space_id_fn: Callable[[str], str] = get_input) -> SPACE_ID:
     """
     Get and verify the space ID
+
     :return:  String space ID
     """
     while True:
@@ -53,6 +55,7 @@ def get_and_verify_space_id(get_space_id_fn: Callable[[str], str] = get_input) -
 def get_and_verify_space_name(get_space_name_fn: Callable[[str], str] = get_input) -> SPACE_NAME:
     """
     Get and verify the space name
+
     :return:  String space name
     """
     while True:
@@ -67,6 +70,7 @@ def get_and_verify_space_name(get_space_name_fn: Callable[[str], str] = get_inpu
 def get_and_verify_description(get_space_description: Callable[[str], str] = get_input) -> DESCRIPTION:
     """
     Get and verify the description
+
     :return:  String description or None
     """
     description = get_space_description('Enter the space description (Optional): ')
@@ -80,6 +84,7 @@ def get_and_verify_description(get_space_description: Callable[[str], str] = get
 def get_and_verify_initials(get_space_initials_fn: Callable[[str], str] = get_input) -> INITIALS:
     """
     Get and verify the initials
+
     :return:  String initials or None
     """
     while True:
@@ -100,6 +105,7 @@ def get_and_verify_initials(get_space_initials_fn: Callable[[str], str] = get_in
 def get_and_verify_color(get_space_color_fn: Callable[[str], str] = get_input) -> COLOR:
     """
     Get and verify the color
+
     :return:  String hex color or None
     """
     while True:
@@ -127,6 +133,7 @@ def get_and_verify_disabled_features(
         get_space_disabled_features_fn: Callable[[str], str] = get_input) -> DISABLED_FEATURES:
     """
     Get and verify the disabled features
+
     :return:  List of disabled features or None
     """
     while True:
@@ -158,6 +165,7 @@ def get_and_verify_disabled_features(
 def get_and_verify_image_url(get_space_image_url_fn: Callable[[str], str] = get_input) -> IMAGE_URL:
     """
     Get and verify the image URL
+
     :return:  String image URL or None
     """
     valid_image_types: List[str] = ["png", "jpeg", "gif", "webp"]

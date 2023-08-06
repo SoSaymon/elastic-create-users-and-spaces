@@ -16,6 +16,7 @@ def prepare_payload(
 ) -> Dict[str, str]:
     """
     Prepare payload for space creation.
+
     :param space_id:  Space ID.
     :param space_name:  Space name.
     :param description:  Space description.
@@ -47,6 +48,7 @@ def prepare_payload(
 def create_space(payload: Dict[str, str]) -> None:
     """
     Create space via Kibana API.
+
     :param payload: Payload.
     :return: None.
     """

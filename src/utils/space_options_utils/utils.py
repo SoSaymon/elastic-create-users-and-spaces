@@ -7,6 +7,7 @@ IMAGE_URL = Optional[str]
 def get_image_url_image_type(image_url: IMAGE_URL) -> Optional[str]:
     """
     Get the image URL image type
+
     :param image_url:  String image URL
     :return:  String image type
     """
@@ -19,6 +20,7 @@ def get_image_url_image_type(image_url: IMAGE_URL) -> Optional[str]:
 def get_input(prompt: str) -> str:
     """
     Get user input.
+
     :param prompt:  String prompt
     :return:  String user input
     """

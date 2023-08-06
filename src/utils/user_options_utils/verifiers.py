@@ -16,6 +16,7 @@ UserData = Tuple[USERNAME, ROLES, PASSWORD, PASSWORD_HASH, FULL_NAME, EMAIL, MET
 def verify(value: Optional[str]) -> bool:
     """
     Verify the value
+
     :param value:  String value
     :return:  Boolean True if valid, False if invalid
     """
@@ -27,6 +28,7 @@ def verify(value: Optional[str]) -> bool:
 def verify_roles_regex_pattern(roles: str) -> bool:
     """
     Verify the roles regex pattern
+
     :return:  Boolean True if valid, False if invalid
     """
     pattern = r'^[a-zA-Z0-9_-]+(,[a-zA-Z0-9_-]+)*$'
@@ -38,6 +40,7 @@ def verify_roles_regex_pattern(roles: str) -> bool:
 def verify_password_length(password: PASSWORD) -> bool:
     """
     Verify the password length
+
     :param password:  String password
     :return:  Boolean True if valid, False if invalid
     """
@@ -49,6 +52,7 @@ def verify_password_length(password: PASSWORD) -> bool:
 def verify_if_space_exists_near_comma(value: str) -> bool:
     """
     Verify if the space exists after a comma in disabled features
+
     :param value:  String value
     :return:  Boolean True if valid, False if invalid
     """
@@ -60,6 +64,7 @@ def verify_if_space_exists_near_comma(value: str) -> bool:
 def verify_if_string_starts_with_comma(value: str) -> bool:
     """
     Verify if the string starts with a comma
+
     :param value:  String value
     :return:  Boolean True if valid, False if invalid
     """
@@ -71,6 +76,7 @@ def verify_if_string_starts_with_comma(value: str) -> bool:
 def verify_if_string_ends_with_comma(value: str) -> bool:
     """
     Verify if the string ends with a comma
+
     :param value:  String value
     :return:  Boolean True if valid, False if invalid
     """
@@ -82,6 +88,7 @@ def verify_if_string_ends_with_comma(value: str) -> bool:
 def verify_metadata_regex_pattern(metadata: str) -> bool:
     """
     Verify the metadata regex pattern
+
     :param metadata:  String metadata
     :return:  Boolean True if valid, False if invalid
     """
@@ -94,6 +101,7 @@ def verify_metadata_regex_pattern(metadata: str) -> bool:
 def verify_enabled_regex_pattern(enabled: str) -> bool:
     """
     Verify the enabled regex pattern
+
     :param enabled:  String enabled
     :return:  Boolean True if valid, False if invalid
     """

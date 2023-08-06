@@ -1,0 +1,29 @@
+User options utilities package
+==============================
+
+Submodules
+----------
+
+User options utils module
+-------------------------
+
+.. automodule:: src.utils.user_options_utils.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+User options verifiers module
+-----------------------------
+
+.. automodule:: src.utils.user_options_utils.verifiers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.utils.user_options_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

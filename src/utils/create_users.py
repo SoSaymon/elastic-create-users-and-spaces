@@ -19,6 +19,7 @@ class User:
     ) -> None:
         """
         Create an Elasticsearch user.
+
         :param username:  The username of the user to create. Required.
         :param roles:  The roles of the user to create. Required.
         :param password:  The password of the user to create. Required if password_hash is not specified.
@@ -49,6 +50,7 @@ class User:
     def prepare_payload(self) -> Dict[str, Any]:
         """
         Prepare the request body for the Elasticsearch API user creation request.
+
         :return: The request body.
         """
         request_body = {}
@@ -73,6 +75,7 @@ class User:
     def create(self) -> None:
         """
         Create the user in Elasticsearch.
+
         :return: None
         :raises requests.exceptions.HTTPError: If the request fails.
         """
@@ -111,6 +114,7 @@ class User:
     def validate_roles(self) -> None:
         """
         Validate that the roles are not empty.
+
         :return: None
         :raises ValueError: If no roles are specified.
         """
@@ -129,6 +133,7 @@ class User:
     def validate_password(self) -> None:
         """
         Validate that the password and password_hash are not both specified.
+
         :return: None
         :raises ValueError: If both password and password_hash are specified.
         """
