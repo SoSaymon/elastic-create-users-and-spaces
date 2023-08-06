@@ -83,6 +83,7 @@ def verify_color_regex_pattern(color: COLOR) -> bool:
 def verify_if_space_exists_near_comma(value: str) -> bool:
     """
     Verify if the space exists after a comma in disabled features
+
     :param value:  String value
     :return:  Boolean True if valid, False if invalid
     """
@@ -94,6 +95,7 @@ def verify_if_space_exists_near_comma(value: str) -> bool:
 def verify_if_string_starts_with_comma(value: str) -> bool:
     """
     Verify if the string starts with a comma
+
     :param value:  String value
     :return:  Boolean True if valid, False if invalid
     """
@@ -105,6 +107,7 @@ def verify_if_string_starts_with_comma(value: str) -> bool:
 def verify_if_string_ends_with_comma(value: str) -> bool:
     """
     Verify if the string ends with a comma
+
     :param value:  String value
     :return:  Boolean True if valid, False if invalid
     """
@@ -116,6 +119,7 @@ def verify_if_string_ends_with_comma(value: str) -> bool:
 def verify_disabled_features_regex_pattern(disabled_features: str) -> bool:
     """
     Verify the disabled features regex pattern
+
     :param disabled_features:  String disabled features
     :return:  Boolean True if valid, False if invalid
     """
@@ -128,6 +132,7 @@ def verify_disabled_features_regex_pattern(disabled_features: str) -> bool:
 def verify_if_image_url_starts_with_data_image(image_url: IMAGE_URL) -> bool:
     """
     Verify if the image URL starts with data:image
+
     :param image_url:  String image URL
     :return:  Boolean True if valid, False if invalid
     """
@@ -139,6 +144,7 @@ def verify_if_image_url_starts_with_data_image(image_url: IMAGE_URL) -> bool:
 def verify_if_image_url_has_image_type(image_url: IMAGE_URL) -> bool:
     """
     Verify if the image URL has an image type
+
     :param image_url:  String image URL
     :return:  Boolean True if valid, False if invalid
     """
@@ -151,6 +157,7 @@ def verify_if_image_url_has_image_type(image_url: IMAGE_URL) -> bool:
 def verify_if_image_url_is_base64_encoded(image_url: IMAGE_URL) -> bool:
     """
     Verify if the image URL is base64 encoded
+
     :param image_url:  String image URL
     :return:  Boolean True if valid, False if invalid
     """

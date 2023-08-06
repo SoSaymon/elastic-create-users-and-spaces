@@ -20,6 +20,7 @@ UserData = Tuple[USERNAME, ROLES, PASSWORD, PASSWORD_HASH, FULL_NAME, EMAIL, MET
 def get_and_verify_user_options() -> UserData:
     """
     Get and verify user options
+
     :return:  A tuple of user options.
     """
     username = get_and_verify_username()
@@ -40,6 +41,7 @@ def get_and_verify_user_options() -> UserData:
 def get_and_verify_username(get_user_username_fn: Callable[[str], str] = get_input) -> USERNAME:
     """
     Get and verify the username
+
     :return:  String username
     """
     while True:
@@ -54,6 +56,7 @@ def get_and_verify_username(get_user_username_fn: Callable[[str], str] = get_inp
 def get_and_verify_roles(get_user_role_fn: Callable[[str], str] = get_input) -> ROLES:
     """
     Get and verify the roles
+
     :return:  List of roles or None
     """
     while True:
@@ -78,6 +81,7 @@ def get_and_verify_roles(get_user_role_fn: Callable[[str], str] = get_input) -> 
 def get_and_verify_password(get_user_password_fn: Callable[[str], str] = get_input) -> PASSWORD:
     """
     Get and verify the password
+
     :return:  String of password or None
     """
     while True:
@@ -97,6 +101,7 @@ def get_and_verify_password(get_user_password_fn: Callable[[str], str] = get_inp
 def get_and_verify_password_hash(get_user_password_hash_fn: Callable[[str], str] = get_input) -> PASSWORD_HASH:
     """
     Get and verify the password hash
+
     :return:  String of password hash
     """
     while True:
@@ -111,6 +116,7 @@ def get_and_verify_password_hash(get_user_password_hash_fn: Callable[[str], str]
 def get_and_verify_full_name(get_user_full_name_fn: Callable[[str], str] = get_input) -> FULL_NAME:
     """
     Get and verify the full name
+
     :return:  String of full name or None
     """
     while True:
@@ -125,6 +131,7 @@ def get_and_verify_full_name(get_user_full_name_fn: Callable[[str], str] = get_i
 def get_and_verify_email(get_user_email_fn: Callable[[str], str] = get_input) -> EMAIL:
     """
     Get and verify the email
+
     :return:  String of email or None
     """
     while True:
@@ -139,6 +146,7 @@ def get_and_verify_email(get_user_email_fn: Callable[[str], str] = get_input) ->
 def get_and_verify_metadata(get_user_metadata_fn: Callable[[str], str] = get_input) -> METADATA:
     """
     Get and verify the metadata
+
     :return:  Dict of metadata or None
     """
     while True:
@@ -170,6 +178,7 @@ def get_and_verify_metadata(get_user_metadata_fn: Callable[[str], str] = get_inp
 def get_and_verify_enabled(get_user_enabled_fn: Callable[[str], str] = get_input) -> ENABLED:
     """
     Get and verify the enabled status
+
     :return:  True if enabled, False if disabled
     """
     while True:

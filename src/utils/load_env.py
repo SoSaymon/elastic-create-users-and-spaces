@@ -16,6 +16,7 @@ get_env = os.environ.get
 def get_all_env() -> (ElasticUrl, KibanaUrl, Username, Password):
     """
         Get all environment variables.
+
         :return:  A tuple of environment variables.
     """
     elastic_url = get_env('ELASTICSEARCH_URL')

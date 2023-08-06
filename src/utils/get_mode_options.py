@@ -31,6 +31,7 @@ UserData = Tuple[USERNAME, ROLES, PASSWORD, PASSWORD_HASH, FULL_NAME, EMAIL, MET
 def get_mode_options(mode: str) -> Union[SpaceData, UserData]:
     """
     Get user options for space or user mode.
+
     :param mode:  The mode to run the script in. Required.
     :return:  A tuple of user options.
     """
