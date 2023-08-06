@@ -5,7 +5,7 @@
   <p align="center">
     Python script to create Elasticsearch users and Kibana spaces
     <br />
-    <a href=""><strong>Explore the docs »</strong></a>
+    <a href="https://sosaymon.github.io/elastic-create-users-and-spaces/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/SoSaymon/elastic-create-users-and-spaces/issues">Report Bug</a>
