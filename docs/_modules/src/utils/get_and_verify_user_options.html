@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.utils.get_and_verify_user_options &mdash; Elastic create users and spaces 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Elastic create users and spaces
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Elastic create users and spaces</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.utils.get_and_verify_user_options</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.utils.get_and_verify_user_options</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">src.utils.user_options_utils.verifiers</span> <span class="kn">import</span> <span class="n">verify</span><span class="p">,</span> <span class="n">verify_roles_regex_pattern</span><span class="p">,</span> <span class="n">verify_password_length</span><span class="p">,</span> \
+    <span class="n">verify_if_space_exists_near_comma</span><span class="p">,</span> <span class="n">verify_if_string_starts_with_comma</span><span class="p">,</span> <span class="n">verify_if_string_ends_with_comma</span><span class="p">,</span> \
+    <span class="n">verify_metadata_regex_pattern</span><span class="p">,</span> <span class="n">verify_enabled_regex_pattern</span>
+<span class="kn">from</span> <span class="nn">src.utils.user_options_utils.utils</span> <span class="kn">import</span> <span class="n">get_input</span>
+
+<span class="n">USERNAME</span> <span class="o">=</span> <span class="nb">str</span>
+<span class="n">ROLES</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="n">PASSWORD</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="n">PASSWORD_HASH</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="n">FULL_NAME</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="n">EMAIL</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="n">METADATA</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="n">ENABLED</span> <span class="o">=</span> <span class="nb">bool</span>
+
+<span class="n">UserData</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">USERNAME</span><span class="p">,</span> <span class="n">ROLES</span><span class="p">,</span> <span class="n">PASSWORD</span><span class="p">,</span> <span class="n">PASSWORD_HASH</span><span class="p">,</span> <span class="n">FULL_NAME</span><span class="p">,</span> <span class="n">EMAIL</span><span class="p">,</span> <span class="n">METADATA</span><span class="p">,</span> <span class="n">ENABLED</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="get_and_verify_user_options"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_user_options">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_user_options</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">UserData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify user options</span>
+
+<span class="sd">    :return:  A tuple of user options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">get_and_verify_username</span><span class="p">()</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">get_and_verify_roles</span><span class="p">()</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">get_and_verify_password</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">password</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">password_hash</span> <span class="o">=</span> <span class="n">get_and_verify_password_hash</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">password_hash</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">full_name</span> <span class="o">=</span> <span class="n">get_and_verify_full_name</span><span class="p">()</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">get_and_verify_email</span><span class="p">()</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_and_verify_metadata</span><span class="p">()</span>
+    <span class="n">enabled</span> <span class="o">=</span> <span class="n">get_and_verify_enabled</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">username</span><span class="p">,</span> <span class="n">roles</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">password_hash</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">enabled</span></div>
+
+
+<div class="viewcode-block" id="get_and_verify_username"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_username">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_username</span><span class="p">(</span><span class="n">get_user_username_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">USERNAME</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify the username</span>
+
+<span class="sd">    :return:  String username</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">get_user_username_fn</span><span class="p">(</span><span class="s1">&#39;Enter the username (Required): &#39;</span><span class="p">)</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">username</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verify</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">username</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Username is required.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_and_verify_roles"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_roles">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_roles</span><span class="p">(</span><span class="n">get_user_role_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ROLES</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify the roles</span>
+
+<span class="sd">    :return:  List of roles or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">roles</span> <span class="o">=</span> <span class="n">get_user_role_fn</span><span class="p">(</span><span class="s1">&#39;Enter the roles (Required, comma separated): &#39;</span><span class="p">)</span>
+        <span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verify</span><span class="p">(</span><span class="n">roles</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">verify_if_space_exists_near_comma</span><span class="p">(</span><span class="n">roles</span><span class="p">):</span>
+                <span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; ,&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">verify_roles_regex_pattern</span><span class="p">(</span><span class="n">roles</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">roles</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Roles must be comma separated. Example: role1,role2&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Roles are required.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_and_verify_password"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_password">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_password</span><span class="p">(</span><span class="n">get_user_password_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PASSWORD</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify the password</span>
+
+<span class="sd">    :return:  String of password or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">get_user_password_fn</span><span class="p">(</span><span class="s1">&#39;Enter the password (Optional if you will use password_hash): &#39;</span><span class="p">)</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">password</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verify</span><span class="p">(</span><span class="n">password</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">verify_password_length</span><span class="p">(</span><span class="n">password</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">password</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Password must be at least 6 characters.&#39;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="get_and_verify_password_hash"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_password_hash">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_password_hash</span><span class="p">(</span><span class="n">get_user_password_hash_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PASSWORD_HASH</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify the password hash</span>
+
+<span class="sd">    :return:  String of password hash</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">password_hash</span> <span class="o">=</span> <span class="n">get_user_password_hash_fn</span><span class="p">(</span><span class="s1">&#39;Enter the password hash (Required): &#39;</span><span class="p">)</span>
+        <span class="n">password_hash</span> <span class="o">=</span> <span class="n">password_hash</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verify</span><span class="p">(</span><span class="n">password_hash</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">password_hash</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Password hash is required.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_and_verify_full_name"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_full_name">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_full_name</span><span class="p">(</span><span class="n">get_user_full_name_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FULL_NAME</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify the full name</span>
+
+<span class="sd">    :return:  String of full name or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">full_name</span> <span class="o">=</span> <span class="n">get_user_full_name_fn</span><span class="p">(</span><span class="s1">&#39;Enter the full name (Optional): &#39;</span><span class="p">)</span>
+        <span class="n">full_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verify</span><span class="p">(</span><span class="n">full_name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">full_name</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="get_and_verify_email"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_email">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_email</span><span class="p">(</span><span class="n">get_user_email_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EMAIL</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify the email</span>
+
+<span class="sd">    :return:  String of email or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">get_user_email_fn</span><span class="p">(</span><span class="s1">&#39;Enter the email (Optional): &#39;</span><span class="p">)</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verify</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">email</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="get_and_verify_metadata"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_metadata">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_metadata</span><span class="p">(</span><span class="n">get_user_metadata_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">METADATA</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify the metadata</span>
+
+<span class="sd">    :return:  Dict of metadata or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_user_metadata_fn</span><span class="p">(</span><span class="s1">&#39;Enter the metadata (Optional, comma separated, key:value format): &#39;</span><span class="p">)</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verify</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">verify_if_space_exists_near_comma</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; ,&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">verify_if_string_starts_with_comma</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+            <span class="k">if</span> <span class="n">verify_if_string_ends_with_comma</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">verify_metadata_regex_pattern</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Metadata must be comma separated and in key:value format. Example: key1:value1,key2:value2&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;If you do not want to set metadata, leave the field blank.&#39;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="get_and_verify_enabled"><a class="viewcode-back" href="../../../src.utils.html#src.utils.get_and_verify_user_options.get_and_verify_enabled">[docs]</a><span class="k">def</span> <span class="nf">get_and_verify_enabled</span><span class="p">(</span><span class="n">get_user_enabled_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ENABLED</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get and verify the enabled status</span>
+
+<span class="sd">    :return:  True if enabled, False if disabled</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">enabled</span> <span class="o">=</span> <span class="n">get_user_enabled_fn</span><span class="p">(</span><span class="s1">&#39;Enter the enabled status (Optional (default: True), True/False): &#39;</span><span class="p">)</span>
+        <span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verify</span><span class="p">(</span><span class="n">enabled</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">verify_enabled_regex_pattern</span><span class="p">(</span><span class="n">enabled</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">enabled</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Enabled status must be either true or false.&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;If you do not want to set enabled status, leave the field blank.&#39;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Szymon Chirowski.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+Space options utilities package
+===============================
+
+Submodules
+----------
+
+Space options utils module
+--------------------------
+
+.. automodule:: src.utils.space_options_utils.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Space options verifiers module
+------------------------------
+
+.. automodule:: src.utils.space_options_utils.verifiers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.utils.space_options_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,71 @@
+Source Utilities package
+========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 2
+
+   src.utils.space_options_utils
+   src.utils.user_options_utils
+
+Submodules
+----------
+
+Create Space module
+--------------------
+
+.. automodule:: src.utils.create_space
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Create Users module
+-------------------
+
+.. automodule:: src.utils.create_users
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Get and verify space options module
+-----------------------------------
+
+.. automodule:: src.utils.get_and_verify_space_options
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Get and verify user options module
+----------------------------------
+
+.. automodule:: src.utils.get_and_verify_user_options
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Get mode options module
+-----------------------
+
+.. automodule:: src.utils.get_mode_options
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Load .env module
+----------------
+
+.. automodule:: src.utils.load_env
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
