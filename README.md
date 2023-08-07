@@ -154,7 +154,7 @@
         <p>
             Project Link: <a href="https://github.com/SoSaymon/elastic-create-users-and-spaces/">https://github.com/SoSaymon/elastic-create-users-and-spaces/</a><br/>
             Author: Szymon Chirowski <br/>
-            Documentation: <a href="">LINK</a>
+            Documentation: <a href="https://sosaymon.github.io/elastic-create-users-and-spaces/">https://sosaymon.github.io/elastic-create-users-and-spaces/</a>
         </p>
     </div>
 </section>
