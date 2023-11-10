@@ -1,13 +1,13 @@
 import re
 from typing import List, Tuple, Optional, Callable
 
-from src.utils.space_options_utils.verifiers import verify, verify_space_id, verify_initials_len, \
+from .space_options_utils.verifiers import verify, verify_space_id, verify_initials_len, \
     verify_if_color_starts_with_hash, verify_if_color_has_seven_characters, verify_color_regex_pattern, \
     verify_if_string_starts_with_comma, verify_if_space_exists_near_comma, verify_if_string_ends_with_comma, \
     verify_disabled_features_regex_pattern, verify_if_image_url_is_base64_encoded, \
     verify_if_image_url_has_image_type, verify_if_image_url_starts_with_data_image
 
-from src.utils.space_options_utils.utils import get_image_url_image_type, get_input
+from .space_options_utils.utils import get_image_url_image_type, get_input
 
 SPACE_ID = str
 SPACE_NAME = str
