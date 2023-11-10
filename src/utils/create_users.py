@@ -2,7 +2,7 @@ from typing import Any, Dict, List
 
 import requests
 
-from src.utils.load_env import get_all_env
+from .load_env import get_all_env
 
 
 class User:

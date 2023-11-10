@@ -1,9 +1,9 @@
 import re
 from typing import List, Tuple, Dict, Any, Callable
-from src.utils.user_options_utils.verifiers import verify, verify_roles_regex_pattern, verify_password_length, \
+from .user_options_utils.verifiers import verify, verify_roles_regex_pattern, verify_password_length, \
     verify_if_space_exists_near_comma, verify_if_string_starts_with_comma, verify_if_string_ends_with_comma, \
     verify_metadata_regex_pattern, verify_enabled_regex_pattern
-from src.utils.user_options_utils.utils import get_input
+from .user_options_utils.utils import get_input
 
 USERNAME = str
 ROLES = List[str]

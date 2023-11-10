@@ -3,8 +3,8 @@ from typing import List, Tuple, Dict, Any, Union
 
 sys.path.append('..')
 
-from src.utils.get_and_verify_space_options import get_and_verify_space_options
-from src.utils.get_and_verify_user_options import get_and_verify_user_options
+from .get_and_verify_space_options import get_and_verify_space_options
+from .get_and_verify_user_options import get_and_verify_user_options
 
 SPACE_ID = str
 SPACE_NAME = str
